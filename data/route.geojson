@@ -1,0 +1,1 @@
+var routeData = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"_gpxType":"trk","name":"Cincinnati to Chattanooga","coordinateProperties":{}},"geometry":{"type":"LineString","coordinates":[[-84.536825, 39.109809], [-84.599023, 39.018119], [-84.610654, 38.866616],]}},]}

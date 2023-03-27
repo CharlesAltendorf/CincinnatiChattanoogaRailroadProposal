@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<!-- Use the HTML and CSS you developed in module 01 to fill out this template.-->
+<head>
+  <meta charset=utf-8 />
+  <title>Proposed Rail Route from Cincinnati to Chattanooga</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+     crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css?family=Cabin|Roboto:400,700|Roboto+Condensed:400,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Dancing+Script:400,700&display=swap" rel="stylesheet">
+  <style>
+    /* Add custom styles. */
+    hr {
+     margin: 20px 0;
+     border: 0;
+     height: 1px;
+     background: #0077C0;
+    }
+    .caption {
+     margin: 0 0 20px 0;
+     display: block;
+    }
+    #map {
+  width: 100%;
+  height: 600px;
+}
+
+.menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu li {
+  padding: 8px;
+  margin-bottom: 5px;
+  background-color: #0077C0;
+  color: #EEE1C6;
+}
+
+.menu a {
+  color: #EEE1C6;
+  text-decoration: none;
+}
+
+.menu li:hover {
+  background-color: #00471B;
+  color: #EEE1C6;
+}
+
+.img-fill {
+  width: 100%;
+}
+
+.img-caption {
+  width: 100%;
+  font-weight: 300;
+  font-size: 0.9em;
+  margin: 5px 0 0 0;
+}
+    @media screen and (orientation : landscape) {
+     #map {
+      width: 100%;
+      height: 80vh;
+      grid-row-start: 1;
+      grid-row-end: 2;
+      grid-column-start: 1;
+      grid-column-end: 3;;
+     }
+     .legend {
+      padding: 10px;
+      grid-row-start: 2;
+      grid-row-end: 3;
+      grid-column-start: 1;
+      grid-column-end: 2;
+     }
+     .photos {
+      display: none;
+     }
+    }
+    .marker {
+     height: 25px;
+     float: left;
+     margin: 0 10px;
+    }
+    .highlight {
+     color: #f05716; 
+     font-weight: bold;
+    }
+    .img-fill {
+     width: 50%;
+     height: auto;
+     margin: 10px 0;
+    }
+    /* Use float property to make two-column layout */
+    *{
+      box-sizing: border-box;
+    }
+    [class*="col-"] {
+      float:left;
+      padding: 20px 20pxn 0 20px;
+    }
+    .first-column {
+     float: left;
+     width: 49%;
+     padding-right: 2%;  
+    }
+
+    .second-column {
+     float: left;
+     width: 49%;
+     }
+
+  /* Clear floats after columns */
+    .row::after {
+     content: "";
+     clear: both;
+     display: table;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto Condensed' , sans-serif; /* change made here */
+      font-family: 'Cabin', Sans-Serif;
+      font-weight: 300; /* addition here */
+      color: #313131;
+      background-color: #d6d6d6;
+      font-size: 100%;
+    }
+    header, aside {
+      background-color: #0077C0;
+      color: #EEE1C6;
+      text-align: center;
+    }
+    section, aside, footer {
+      padding:15px;
+    }
+    header {
+      height: 200px;
+      padding: 5px;
+    }
+    aside, .menu li {
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    }
+    footer {
+     background-color: #d6d6d6;
+     color: #5f5f5f;
+     margin: 10px 0 0 0;
+    }
+    h1, h3 {
+      font-family: 'Dancing Script' , cursive;
+    }
+   h1 {
+     font-size: 3.5em;
+     font-weight: 400; /* addition here */
+     margin: 6px;
+   }
+
+   h2 {
+    font-style: italic;
+    font-size: 2em; /* addition here */
+    font-weight: 900;
+    text-align: center;
+   }
+
+   p {
+    font-size: 1.2em;
+    line-height: 1.4em;
+    text-align: center;
+   }
+
+   a {
+     color: #313131;
+   }
+
+   a:hover {
+    color:#00471B;
+    text-decoration: underline;
+  }
+
+  footer ul, footer h3 {
+   margin: 4px 0 10px 0;
+   list-style-type: square;
+  }
+
+  footer li {
+  padding: 6px 0 0 0;
+  margin-left: -10px;
+  }
+
+  footer p {
+   font-weight: 300;
+   font-size: 0.9em;
+  }
+
+  footer img {
+   float: left;
+  }
+  @media only screen and (min-width: 800px) and (min-height: 600px) {
+  .col-s-1 {width: 8.33%;}
+  .col-s-2 {width: 16.66%;}
+  .col-s-3 {width: 25%;}
+  .col-s-4 {width: 33.33%;}
+  .col-s-5 {width: 41.66%;}
+  .col-s-6 {width: 50%;}
+  .col-s-7 {width: 58.33%;}
+  .col-s-8 {width: 66.66%;}
+  .col-s-9 {width: 75%;}
+  .col-s-10 {width: 83.33%;}
+  .col-s-11 {width: 91.66%;}
+  .col-s-12 {width: 100%;}
+
+  #map {
+      /* height: 700px; */
+      /* 85% of the viewport height. Just exploring another unit. */
+      height: 400px; 
+      }
+}
+
+/* 
+Screen larger than 1025px wide and 800px high: for desktop
+*/
+@media only screen and (min-width: 1025px) and (min-height: 800px) {
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
+
+  #map {
+      height: 986px;
+      }
+}
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <!-- Add header information -->
+    <h1>Proposed Rail Route from Cincinnati to Chattanooga</h1>
+  </header>
+  <section>
+    <!-- Add map and body content -->
+    <div id="map"></div>
+    <h2>Click the icons to learn more about the proposed major city stops</h2>
+   
+  <footer>
+    <!-- Add footer information -->
+    <div class="row">
+      <div class="col-2 "></div>
+      <div class="col-6 col-s-6">
+        <ul>
+          <li>
+              Find me on GitHub @<a href="https://github.com/CharlesAltendorf">CharlesAltendorf</a>
+          </li>
+          <li>
+              Linkedin @<a href="https://www.linkedin.com/in/charles-altendorf/">Charles Altendorf</a>
+          </li>
+      </ul>
+      </div>
+      <div class="col-2"></div>
+      <div class="col-6 col-s-6">
+      </div>
+  </div>
+  </footer>
+
+  <!-- Add link to Leaflet JavaScript library. -->
+  <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>  
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script src="data/route.geojson"></script>
+  <!-- Use the latest stable version @ leafletjs.com/download.html -->
+
+  <!-- Starter Javascript -->
+  <script>
+    // Map options control initial location and zoom level.
+    var options = {
+      center: [37.115728, -84.061603],
+      zoom: 8
+    }
+
+    // Create Leaflet map with above options.
+    var map = L.map('map', options);
+
+    // Get basemap URL from Leaflet Providers
+    var basemap_url = 'http://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}'
+
+    // Get basemap attributes from Leaflet Providers
+    var basemap_attributes = {
+      attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      subdomains: 'abcd',
+      minZoom: 1,
+      maxZoom: 16,
+      ext: 'png'
+    }
+
+    // Add tileset as a layer in our map. 
+    var tiles = L.tileLayer(basemap_url, basemap_attributes).addTo(map);
+
+    // ************************************************** //
+
+    // STORING DATA AS VARIABLES IN ARRAYS
+
+    // variables referencing data values
+    var city1Name = "Cincinnati",
+      city1Coords = [39.109809, -84.536825],
+      city1Desc = "(pop 309k) - 1301 Western Av (Union Terminal)",
+      city1State = "Ohio";
+    var city2Name = "Lexington",
+      city2Coords = [39.018119, -84.599023],
+      city2Desc = "Erlanger KY (pop 18k, also serving Florence, pop 23k & CVG airport) - 3319 Crescent Rd",
+      city2State = "Kentucky";
+    var city3Name = "Knoville",
+      city3Coords = [38.866616, -84.610654],
+      city3Desc = "(Walton, pop 4k) 12 Church St",
+      city3State = "Kentucky";
+    var city4Name = "Chattanooga",
+      city4Coords = [38.866616, -84.610654],
+      city4Desc = "(Georgetown, pop 37k) 801 E Main St",
+      city4State = "Kentucky";
+    // arrays of data
+    var cities = [city1Name, city2Name, city3Name, city4Name],
+      coords = [city1Coords, city2Coords, city3Coords, city4Coords],
+      descriptions = [city1Desc, city2Desc, city3Desc, city4Desc],
+      states = [city1State, city2State, city3State, city4State];
+    // ADDING FIRST MARKER TO MAP
+
+    // creating a string of the Popup content
+    var city1Popup = `<b>${cities[0]}</b><br>
+                      <b>Description</b>: ${descriptions[0]}<br>
+                      <b>${states[0]}</b>`;
+
+    // create the Leaflet marker using the coordinates
+    L.marker(coords[0])
+      .addTo(map) // add it to the map
+      .bindPopup(city1Popup); // bind the Popup
+
+    // ADDING SECOND MARKER TO MAP
+    
+    var city2Popup = `<b>${cities[1]}</b><br>
+                      <b>Description (2020)</b>: ${descriptions[1]}<br>
+                      <b>${states[1]}</b>`;
+
+
+    // create the Leaflet marker using the coordinates
+    L.marker(coords[1])
+      .addTo(map) // add it to the map
+      .bindPopup(city2Popup); // bind the Popup
+
+    // ADDING THIRD MARKER TO MAP
+    
+    var city3Popup = `<b>${cities[2]}</b><br>
+                      <b>Description</b>: ${descriptions[2]}<br>
+                      <b>${states[2]}</b>`;
+
+    // create the Leaflet marker using the coordinates
+    L.marker(coords[2])
+      .addTo(map) // add it to the map
+      .bindPopup(city3Popup); // bind the Popup
+      // ADDING FORTH MARKER TO MAP
+    
+      var city4Popup = `<b>${cities[3]}</b><br>
+                      <b>Description</b>: ${descriptions[3]}<br>
+                      <b>${states[3]}</b>`;
+
+    // create the Leaflet marker using the coordinates
+    L.marker(coords[3])
+      .addTo(map) // add it to the map
+      .bindPopup(city4Popup); // bind the Popup
+
+    var myRoute = L.geoJson(routeData, {
+
+    filter : function(feature) {
+    if(feature.geometry.type == "LineString") {
+    return feature;
+    }
+    },
+    style : function(feature) {
+
+    return {
+    color: "#005DAA",
+    weight: 4,
+    opacity: .6,
+    dashArray: "5, 5"
+    }
+    }
+
+    }).addTo(map);
+  </script>
+
+</body>
+
+</html>
